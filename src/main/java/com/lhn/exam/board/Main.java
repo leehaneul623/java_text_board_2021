@@ -2,25 +2,8 @@ package com.lhn.exam.board;
 
 /*
 TODO
--[x] 환영메세지 출력
--[x] 고객으로 부터 명령어 입력 받기
- -[x] 스캐너 객체 하나 만들어보기
- -[x] 받은 명령어 출력하기
--[ ] exit 명령어 처리
- -[x] exit 입력 받으면 종료 라고 출력하기
- -[x] exit 입력 받을때 까지 계속 실행
--[ ] /usr/article/write 명령어 입력 처리
- -[x] 시작 문구 라도 출력
- -[x] 제목과 내용이라도 입력 받기
- -[x] 생성된 게시물 번호 출력
- -[x] 생성될때 마다 게시물 번호가 증가
- -[x] 생성된 게시물을 객체에 담기
- -[x] Article 객체 생성하기
- -[x] Article 클래스 생성하기
--[ ] /usr/article/detail 명령어 입력 처리
- -[x] 명령어를 제대로 입력했다면, 입력 받은 명령어 문구는 안나오도록
- -[x] toString 메서드 오버라이드 하기
- -[x] 생성자 도입
+- [.] /usr/article/detail 입력 처리
+- [ ] /usr/article/detail 입력 되면 가장 최근 게시물 정보 노출
  */
 
 import java.util.Scanner;
@@ -33,6 +16,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         int articlesLastId = 0;
+        Article lastArticle = null;
 
         while (true){
             System.out.printf("명령) ");
@@ -40,8 +24,20 @@ public class Main {
 
             if(cmd.equals("exit")){
                break;
-            }
-            else if(cmd.equals("/usr/article/write")){
+            } else if(cmd.equals("/usr/article/detail")){
+
+                if(lastArticle == null){
+                    System.out.println("게시물이 존재하지 않습니다.");
+                    continue;
+                }
+
+                Article article = lastArticle;
+
+                System.out.println("- 게시물 상세내용 -");
+                System.out.printf("번호 : %d\n", article.id);
+                System.out.printf("제목 : %s\n", article.title);
+                System.out.printf("내용 : %s\n", article.body);
+            } else if(cmd.equals("/usr/article/write")){
                 System.out.println("- 게시물 등록 -");
                 System.out.printf("제목 : ");
                 String title = sc.nextLine();
@@ -51,19 +47,18 @@ public class Main {
                 articlesLastId = id;
 
                 Article article = new Article(id, title, body);
-
-                System.out.println(article);
+                lastArticle = article;
+                System.out.println("생성된 게시물 객체 : " + article);
 
                 System.out.printf("%d번 게시물이 입력 되었습니다.\n", id);
-            }
-            else{
+            } else{
                 System.out.printf("입력받은 명령어 : %s\n", cmd);
             }
         }
 
-        sc.close();
-
         System.out.println("== 프로그램 종료 ==");
+
+        sc.close();
     }
 }
 
